@@ -11,7 +11,9 @@ The "Execute first.R" file has the code for extracting data from John Hopkins Un
 4. I output Rdata files for cases where the number of days is counted from the day they first exceeded 100 for a country.  
 5. I output Rdata files for deaths where the number of days is counted from the day they first exceeded 10 for a country.  
 
-The Rmd files are examples of creating the graphs by geographical region.
+Next - run and Rmd file or make your own.  The first thing these files do is load the Rdata files just created.
+
+The Rmd files are examples of creating the graphs by geographical region.  
 Note:
 1. I use splines with 3 knots for the smoothing (blue lines on the graphs).  Eventually more knots may need to be added. 
 2. The shaded area is the 95% confidence interval of the smoothed line.  set se = FALSE to remove.  

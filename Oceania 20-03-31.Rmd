@@ -1,7 +1,7 @@
 ---
 title: "Oceania COVID19 Cases and Deaths; Rate of doubling."
-author: "Professor John Pickering"
-date: today()
+author: Professor John W Pickering, Univeristy of Otago Christchurch, New Zealand
+date: "`r format(Sys.time(), '%d %B, %Y')` NZST"
 output:
     pdf_document:
         toc: true
@@ -30,13 +30,12 @@ yesterday_deaths_Aus = 15
 
 df_g <- df_100[df_100$location == "Oceania",] %>% 
   filter(!is.na(country))
-# Correct one very odd value
 
 # Manually add
 
 new_cases_NZ = data_frame(
   country = "New Zealand",
-  date = as_date("2020-03-29"),
+  date = as_date("2020-03-31"),
   confirmed = yesterday_cases_NZ,
   ndays = max(df_g[df_g$country == "New Zealand",]$ndays) + 1,
   change = yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE),
@@ -47,7 +46,7 @@ new_cases_NZ = data_frame(
 
 new_cases_AUS = data_frame(
   country = "Australia",
-  date = as_date("2020-03-29"),
+  date = as_date("2020-03-31"),
   confirmed = yesterday_cases_Aus,
   ndays = max(df_g[df_g$country == "Australia",]$ndays) + 1,
   change = yesterday_cases_Aus - max(df_g[df_g$country == "Australia",]$confirmed, na.rm = TRUE),
@@ -60,64 +59,6 @@ number_rows = ceiling(length(unique(df_g$country))/1)
 
 df_g <- bind_rows(df_g,new_cases_NZ, new_cases_AUS ) %>% 
   arrange(country, ndays)
-```
-
-```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, eval = FALSE}
-
-g_cases <- ggplot() +
-  # geom_point(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
-  # geom_line(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.3, size = 0.35) +
-  
-  # geom_smooth(data = df_g, aes(x =  ndays, y = dbl, colour = country),  method = "lm",formula = y ~ splines::ns(x, 4),  se = TRUE,  alpha = 0.35,   size = 0.2) +
-  geom_smooth(data = df_g, 
-              aes(x =  ndays, y = dbl, colour = country), 
-              method = "lm",
-              formula = y ~ splines::ns(x, df = 3),
-              #formula = y ~ splines::bs(x, df = 4),
-              # formula = y ~ rcs(x, nk = 2),
-              se = FALSE,
-              alpha = 0.85, 
-              size = 2) 
-
-s_data <-  ggplot_build(g_cases)$data[[1]] %>% 
-  # select(colour, x, y) %>% 
-  # arrange(colour, x) %>% 
-  group_by(colour) %>% 
-  mutate(max_x = max(x)) %>% 
-  mutate(max_x = ifelse(x == max(x), max(x), NA)) %>% 
-  ungroup() %>% 
-  filter(!is.na(max_x))
-
-#s_data[s_data$country == "United Kingdom",]$y  <- 5# Fudge
-
-s_data$country = df_g_countries
-
-g_cases <- g_cases +
-  geom_label_repel(data = s_data, aes(x = x, y = y, colour = country, label = country), direction = "y",min.segment.length = 0.5, nudge_x = 0, nudge_y = 0, alpha = 0.8) +
-  annotate("text", x = 20, y = 1, label = "29 March 2020 | John Pickering @kiwiskiNZ") +
-  annotate("text", x = 20, y = 1.3, label = "Data from John Hopkins") +
-  scale_colour_manual(values = c("#7f3b08",
-                                 "#b35806",
-                                 "#e08214",
-                                 "#fdb863",
-                                 "#ba9157",
-                                 "#8e2020",
-                                 "#7688eb",
-                                 "#d2abc0",
-                                 "#8073ac",
-                                 "#542988",
-                                 "#7d0fc6",
-                                 "#af110d")) +
-  scale_y_log10(breaks = c(0.1,1, 2, 3,6,10,30, 100,1000,10000), labels = c("0.1","1","2"  ,"3" ,"6"  , "10", "30","100","1000","10000")) +
-  
-  xlab("Number of days since 100th case") + ylab("Number of days for doubling") +
-  coord_cartesian(ylim = c(1,30)) +
-  theme(legend.position = "none",
-        panel.background = element_rect(fill = "seashell2"),
-        panel.grid = element_line(colour = "grey80"))
-
-ggsave("200329 ME Cases.jpg", plot = g_cases_ME, height = 18, width = 24, units = "cm")
-
 ```
 
 
@@ -148,9 +89,9 @@ g_cases_separate <- ggplot() +
 
 g_cases_separate <- g_cases_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("Oceania 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("Oceania 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
-ggsave(g_cases_separate, filename = "20-03-29 Oceania Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+ggsave(g_cases_separate, filename = "20-03-31 Oceania Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
 (g_cases_separate)
 ```
 
@@ -166,7 +107,7 @@ df_g <- df_10[df_10$location == "Oceania",] %>%
 
 #new_deaths_NZ = data_frame(
 #  country = "New Zealand",
-#  date = as_date("2020-03-29"),
+#  date = as_date("2020-03-31"),
 #  confirmed = yesterday_deaths_NZ,
 #  ndays = max(df_g[country == "New Zealand",]$ndays) + 1,
 #  change = yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE),
@@ -177,7 +118,7 @@ df_g <- df_10[df_10$location == "Oceania",] %>%
 
 new_deaths_AUS = data_frame(
   country = "Australia",
-  date = as_date("2020-03-29"),
+  date = as_date("2020-03-31"),
   confirmed = yesterday_deaths_Aus,
   ndays = max(df_g[country == "Australia",]$ndays) + 1,
   change = yesterday_cases_Aus - max(df_g[df_g$country == "Australia",]$confirmed, na.rm = TRUE),
@@ -219,8 +160,8 @@ g_deaths_separate <- ggplot() +
 
 g_deaths_separate <- g_deaths_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("Oceania 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("Oceania 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
-ggsave(g_deaths_separate, filename = "20-03-29 Oceania Deaths.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+ggsave(g_deaths_separate, filename = "20-03-31 Oceania Deaths.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
 (g_deaths_separate)
 ```

@@ -1,7 +1,7 @@
 ---
 title: "Americas COVID19 Cases and Deaths; Rate of doubling."
-author: "Professor John Pickering"
-date: today()
+author: Professor John W Pickering, Univeristy of Otago Christchurch, New Zealand
+date: "`r format(Sys.time(), '%d %B, %Y')` NZST"
 output:
     pdf_document:
         toc: true
@@ -57,11 +57,11 @@ g_cases_separate <- ggplot() +
 
 g_cases_separate <- g_cases_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("Americas 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("Americas 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
 number_rows = ceiling(length(unique(df_g$country))/3)
 
-ggsave(g_cases_separate, filename = "20-03-29 Americas Cases.jpg", width = 210  , height = 20 + 40 * number_rows , units = "mm")
+ggsave(g_cases_separate, filename = "20-03-31 Americas Cases.jpg", width = 210  , height = 20 + 40 * number_rows , units = "mm")
 (g_cases_separate)
 ```
 
@@ -101,8 +101,8 @@ g_deaths_separate <- ggplot() +
 
 g_deaths_separate <- g_deaths_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("Americas 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("Americas 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
-ggsave(g_deaths_separate, filename = "20-03-29 Americas Deaths.jpg", width = 210  , height = 20 + 40 * number_rows , units = "mm")
+ggsave(g_deaths_separate, filename = "20-03-31 Americas Deaths.jpg", width = 210  , height = 20 + 40 * number_rows , units = "mm")
 (g_deaths_separate)
 ```

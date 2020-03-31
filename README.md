@@ -1,6 +1,5 @@
 # COVID19_graphs
-COVID19_graphs
-Graphs showing the number of days needed to double the number of COVID-19 cases or deaths per country.  
+COVID19_graphs graphs showing the number of days needed to double the number of COVID-19 cases or deaths per country.  
 For convenience separated into geographical areas.
 
 The "Execute first.R" file has the code for extracting data from John Hopkins University (thanks JH Uni) and with the help of functions in covid_fns.R (not mine: from https://joachim-gassen.github.io/2020/03/tidying-the-john-hopkins-covid-19-data/) execute code to:
@@ -23,4 +22,5 @@ Note:
 I've uploaded some example graphs generated.  For a new day I just change the dates and away I go ....
 
 
-
+## Update 1 April 2020
+I've amended the "Execute First.R" and "covid_fns.R" files to extract and reformat the data for the US states.  I've added a file to produce the graphs for each state.  

@@ -87,7 +87,7 @@ deaths_long_10 <- deaths_long_10 %>%
   mutate(ndays = 1:n()) %>%  
   ungroup() 
 deaths_long_10 <- deaths_long_10 %>% 
-  mutate(change = ifelse(change < 5, NA, change)) %>% 
+  mutate(change = ifelse(change < 1, NA, change)) %>% 
   mutate(dbl = (deaths - change)/change) %>% 
   mutate(dbl = ifelse(is.infinite(dbl), NA, dbl)) 
 

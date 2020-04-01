@@ -61,9 +61,11 @@ g_cases_separate <- ggplot() +
 
 g_cases_separate <- g_cases_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("ME 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("ME 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
-ggsave(g_cases_separate, filename = "20-03-29 ME Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+number_rows = ceiling(length(unique(df_g$country))/3)
+
+ggsave(g_cases_separate, filename = "20-03-31 ME Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
 (g_cases_separate)
 ```
 
@@ -73,18 +75,15 @@ ggsave(g_cases_separate, filename = "20-03-29 ME Cases.jpg", width = 210  , heig
 
 df_g <- df_10[df_10$location == "Gulf/Middle East",] %>% 
   filter(!is.na(country))
-# Correct one very odd value
 
 ```
 
-```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 4, eval = FALSE}
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 4, eval = TRUE}
 g_deaths_separate <- ggplot() +
   geom_smooth(data = df_g, 
               aes(x =  ndays, y = dbl), 
               method = "lm",
               formula = y ~ splines::ns(x, df = 3),
-              #formula = y ~ splines::bs(x, df = 4),
-             # formula = y ~ rcs(x, nk = 2),
               se = TRUE,
               alpha = 0.85, 
               size = 2) +
@@ -102,11 +101,11 @@ g_deaths_separate <- ggplot() +
 
 g_deaths_separate <- g_deaths_separate + 
   facet_wrap(~ country, ncol = 3) + 
-  ggtitle("ME 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("ME 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
 number_rows = ceiling(length(unique(df_g$country))/3)
 
-ggsave(g_deaths_separate, filename = "20-03-29 ME Deaths.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+ggsave(g_deaths_separate, filename = "20-03-31 ME Deaths.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
 (g_deaths_separate)
 ```
 
@@ -137,10 +136,10 @@ g_cases_separate <- ggplot() +
         panel.background = element_rect(fill = "seashell2"),
         panel.grid = element_line(colour = "grey80"),
         panel.grid.minor = element_blank()) + 
-  ggtitle("Morocco 29 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+  ggtitle("Morocco 31 March 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
 
 
 
-ggsave(g_cases_separate, filename = "20-03-29 Morocco  Cases.jpg", width = 210  , height = 20 + 35 * number_rows, units = "mm")
+ggsave(g_cases_separate, filename = "20-03-31 Morocco  Cases.jpg", width = 210  , height = 20 + 35 * number_rows, units = "mm")
 (g_cases_separate)
 ```

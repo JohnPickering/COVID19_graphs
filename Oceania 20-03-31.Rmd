@@ -17,10 +17,10 @@ library(splines)
 
 load("CASES Greater 100.Rdata")
 load("DEATHS Greater 10.Rdata")
-yesterday_cases_NZ = 514
-yesterday_deaths_NZ = 1
-yesterday_cases_Aus = 3980
-yesterday_deaths_Aus = 15
+yesterday_cases_NZ = 708
+yesterday_deaths_NZ = 0
+yesterday_cases_Aus = 4707
+yesterday_deaths_Aus = 20
 
 ```
 \newpage  
@@ -44,6 +44,13 @@ new_cases_NZ = data_frame(
   max_ndays = max(df_g[df_g$country == "New Zealand",]$ndays + 1),
 )
 
+number_rows = ceiling(length(unique(df_g$country))/1)
+
+df_g <- bind_rows(df_g,new_cases_NZ) %>% 
+  arrange(country, ndays)
+```
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, eval = TRUE}
+
 new_cases_AUS = data_frame(
   country = "Australia",
   date = as_date("2020-03-31"),
@@ -57,7 +64,7 @@ new_cases_AUS = data_frame(
 
 number_rows = ceiling(length(unique(df_g$country))/1)
 
-df_g <- bind_rows(df_g,new_cases_NZ, new_cases_AUS ) %>% 
+df_g <- bind_rows(df_g, new_cases_AUS ) %>% 
   arrange(country, ndays)
 ```
 
@@ -116,6 +123,12 @@ df_g <- df_10[df_10$location == "Oceania",] %>%
 #  max_ndays = max(df_g[df_g$country == "New Zealand",]$ndays + 1),
 #)
 
+#df_g <- bind_rows(df_g,new_deaths_NZ) %>% 
+#  arrange(country, ndays)
+```
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
 new_deaths_AUS = data_frame(
   country = "Australia",
   date = as_date("2020-03-31"),
@@ -127,7 +140,7 @@ new_deaths_AUS = data_frame(
   max_ndays = max(df_g[df_g$country == "Australia",]$ndays + 1),
 )
 
-df_g <- bind_rows(new_deaths_AUS ) %>% 
+df_g <- bind_rows(df_g,new_deaths_AUS ) %>% 
   arrange(country, ndays)
 #df_g <- bind_rows(df_g,new_deaths_NZ, new_deaths_AUS ) %>% 
 #  arrange(country, ndays)

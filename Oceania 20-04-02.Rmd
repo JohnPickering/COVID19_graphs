@@ -1,0 +1,185 @@
+---
+title: "Oceania COVID19 Cases and Deaths; Rate of doubling."
+author: Professor John W Pickering, Univeristy of Otago Christchurch, New Zealand
+date: "`r format(Sys.time(), '%d %B, %Y')` NZST"
+output:
+    pdf_document:
+        toc: true
+        toc_depth: 3
+
+---
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(lubridate)
+library(rms)
+library(splines)
+
+load("CASES Greater 100.Rdata")
+load("DEATHS Greater 10.Rdata")
+yesterday_cases_NZ = 708
+yesterday_deaths_NZ = 0
+yesterday_cases_Aus = 4707
+yesterday_deaths_Aus = 20
+
+```
+\newpage  
+
+# CASES
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+df_g <- df_100[df_100$location == "Oceania",] %>% 
+  filter(!is.na(country))
+
+# Manually add
+yesterday_cases_NZ = max(df_g[df_g$country == "New Zealand",]$confirmed) + 71
+yesterday_cases_Aus = max(df_g[df_g$country == "Australia",]$confirmed) + 224
+
+
+new_cases_NZ = data_frame(
+  country = "New Zealand",
+  date = as_date("2020-04-02"),
+  confirmed = yesterday_cases_NZ,
+  ndays = max(df_g[df_g$country == "New Zealand",]$ndays) + 1,
+  change = yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE),
+  dbl = max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE)/(yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE)),
+  location = "Oceania",
+  max_ndays = max(df_g[df_g$country == "New Zealand",]$ndays + 1),
+)
+
+number_rows = ceiling(length(unique(df_g$country))/1)
+
+df_g <- bind_rows(df_g,new_cases_NZ) %>% 
+  arrange(country, ndays)
+```
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, eval = TRUE}
+
+new_cases_AUS = data_frame(
+  country = "Australia",
+  date = as_date("2020-04-02"),
+  confirmed = yesterday_cases_Aus,
+  ndays = max(df_g[df_g$country == "Australia",]$ndays) + 1,
+  change = yesterday_cases_Aus - max(df_g[df_g$country == "Australia",]$confirmed, na.rm = TRUE),
+  dbl = max(df_g[df_g$country == "Australia",]$confirmed, na.rm = TRUE)/(yesterday_cases_Aus - max(df_g[df_g$country == "Australia",]$confirmed, na.rm = TRUE)),
+  location = "Oceania",
+  max_ndays = max(df_g[df_g$country == "Australia",]$ndays + 1),
+)
+
+number_rows = ceiling(length(unique(df_g$country))/1)
+
+df_g <- bind_rows(df_g, new_cases_AUS ) %>% 
+  arrange(country, ndays)
+```
+
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 4}
+
+
+g_cases_separate <- ggplot() +
+  geom_smooth(data = df_g, 
+              aes(x =  ndays, y = dbl), 
+              method = "lm",
+              formula = y ~ splines::ns(x, df = 3),
+              #formula = y ~ splines::bs(x, df = 4),
+              # formula = y ~ rcs(x, nk = 2),
+              se = TRUE,
+              alpha = 0.85, 
+              size = 2) +
+  geom_line(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  geom_point(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  
+  scale_y_log10(breaks = c(0.1,1,3,5,10,30, 100,1000,10000), labels = c("0.1","1","3" ,"5", "10", "30","100","1000","10000")) +
+  
+  xlab("Number of days since 100th case") + ylab("Number of days for doubling") +
+  coord_cartesian(ylim = c(1,100)) +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = "seashell2"),
+        panel.grid = element_line(colour = "grey80"),
+        panel.grid.minor = element_blank()) 
+
+g_cases_separate <- g_cases_separate + 
+  facet_wrap(~ country, ncol = 3) + 
+  ggtitle("Oceania 2 April 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+
+ggsave(g_cases_separate, filename = "20-04-02 Oceania Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+(g_cases_separate)
+```
+
+\newpage
+# DEATHS
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+df_g <- df_10[df_10$location == "Oceania",] %>% 
+  filter(!is.na(country))
+# Correct one very odd value
+
+# Manually add
+
+#new_deaths_NZ = data_frame(
+#  country = "New Zealand",
+#  date = as_date("2020-04-02"),
+#  confirmed = yesterday_deaths_NZ,
+#  ndays = max(df_g[country == "New Zealand",]$ndays) + 1,
+#  change = yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE),
+#  dbl = max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE)/(yesterday_cases_NZ - max(df_g[df_g$country == "New Zealand",]$confirmed, na.rm = TRUE)),
+#  location = "Oceania",
+#  max_ndays = max(df_g[df_g$country == "New Zealand",]$ndays + 1),
+#)
+
+#df_g <- bind_rows(df_g,new_deaths_NZ) %>% 
+#  arrange(country, ndays)
+```
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+yesterday_deaths_Aus = max(df_g[df_g$country == "Australia",]$deaths) + 2
+
+new_deaths_AUS = data_frame(
+  country = "Australia",
+  date = as_date("2020-04-02"),
+  deaths = yesterday_deaths_Aus,
+  ndays = max(df_g[country == "Australia",]$ndays) + 1,
+  change = yesterday_deaths_Aus - max(df_g[df_g$country == "Australia",]$deaths, na.rm = TRUE),
+  dbl = max(df_g[df_g$country == "Australia",]$deaths, na.rm = TRUE)/(yesterday_deaths_Aus - max(df_g[df_g$country == "Australia",]$deaths, na.rm = TRUE)),
+  location = "Oceania",
+  max_ndays = max(df_g[df_g$country == "Australia",]$ndays + 1),
+)
+
+df_g <- bind_rows(df_g,new_deaths_AUS ) %>% 
+  arrange(country, ndays)
+#df_g <- bind_rows(df_g,new_deaths_NZ, new_deaths_AUS ) %>% 
+#  arrange(country, ndays)
+
+```
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 4}
+
+g_deaths_separate <- ggplot() +
+  geom_smooth(data = df_g, 
+              aes(x =  ndays, y = dbl), 
+              method = "lm",
+              formula = y ~ splines::ns(x, df = 3),
+              #formula = y ~ splines::bs(x, df = 4),
+              # formula = y ~ rcs(x, nk = 2),
+              se = TRUE,
+              alpha = 0.85, 
+              size = 2) +
+  geom_line(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  geom_point(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  
+  scale_y_log10(breaks = c(0.1,1,3,5,10,30, 100,1000,10000), labels = c("0.1","1","3" ,"5", "10", "30","100","1000","10000")) +
+  
+  xlab("Number of days since 10th death") + ylab("Number of days for doubling") +
+  coord_cartesian(ylim = c(0.25,100)) +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = "seashell2"),
+        panel.grid = element_line(colour = "grey80"),
+        panel.grid.minor = element_blank()) 
+
+g_deaths_separate <- g_deaths_separate + 
+  facet_wrap(~ country, ncol = 3) + 
+  ggtitle("Oceania 2 April 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+
+ggsave(g_deaths_separate, filename = "20-04-02 Oceania Deaths.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+(g_deaths_separate)
+```

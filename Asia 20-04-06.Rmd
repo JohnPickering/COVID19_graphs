@@ -1,0 +1,111 @@
+---
+title: "Asian COVID19 Cases and Deaths; Rate of doubling."
+author: Professor John W Pickering, Univeristy of Otago Christchurch, New Zealand
+date: "`r format(Sys.time(), '%d %B, %Y')` NZST"
+output:
+    pdf_document:
+        toc: true
+        toc_depth: 3
+
+---
+```{r libraries, echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+library(tidyverse)
+library(ggrepel)
+library(lubridate)
+library(rms)
+library(splines)
+
+load("CASES Greater 100.Rdata")
+load("DEATHS Greater 10.Rdata")
+
+
+```
+\newpage  
+
+# CASES
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+df_g <- df_100[df_100$location == "Asia",] %>% 
+  filter(!is.na(country))
+# Correct one very odd value
+
+#df_g_countries <- unique(df_g$country) 
+```
+
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 10}
+
+
+g_cases_separate <- ggplot() +
+  geom_smooth(data = df_g, 
+              aes(x =  ndays, y = dbl), 
+              method = "lm",
+              formula = y ~ splines::ns(x, df = 3),
+              #formula = y ~ splines::bs(x, df = 4),
+             # formula = y ~ rcs(x, nk = 2),
+              se = TRUE,
+              alpha = 0.85, 
+              size = 2) +
+  geom_line(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  geom_point(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+
+  scale_y_log10(breaks = c(0.1,1,3,5,10,30, 100,1000,10000), labels = c("0.1","1","3" ,"5", "10", "30","100","1000","10000")) +
+  
+  xlab("Number of days since 100th case") + ylab("Number of days for doubling") +
+  coord_cartesian(ylim = c(1,10000)) +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = "seashell2"),
+        panel.grid = element_line(colour = "grey80"),
+        panel.grid.minor = element_blank()) 
+
+g_cases_separate <- g_cases_separate + 
+  facet_wrap(~ country, ncol = 3) + 
+  ggtitle("Asia 5 April 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+
+number_rows = ceiling(length(unique(df_g$country))/3)
+
+ggsave(g_cases_separate, filename = "20-04-05 Asia Cases.jpg", width = 210  , height = 20 + 40 * number_rows, units = "mm")
+(g_cases_separate)
+```
+
+\newpage
+# DEATHS
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE}
+
+df_g <- df_10[df_10$location == "Asia",] %>% 
+  filter(!is.na(country))
+# Correct one very odd value
+
+```
+
+```{r , echo=FALSE, message=FALSE, warning=FALSE, cache=FALSE, fig.height = 10}
+
+g_deaths_separate <- ggplot() +
+  geom_smooth(data = df_g, 
+              aes(x =  ndays, y = dbl), 
+              method = "lm",
+              formula = y ~ splines::ns(x, df = 3),
+              #formula = y ~ splines::bs(x, df = 4),
+             # formula = y ~ rcs(x, nk = 2),
+              se = TRUE,
+              alpha = 0.85, 
+              size = 2) +
+  geom_line(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+  geom_point(data = df_g, aes(x = ndays, y = dbl, colour = country), alpha = 0.6, size = 0.5) +
+
+  scale_y_log10(breaks = c(0.1,1,3,5,10,30, 100,1000,10000), labels = c("0.1","1","3" ,"5", "10", "30","100","1000","10000")) +
+  
+  xlab("Number of days since 10th death") + ylab("Number of days for doubling") +
+  coord_cartesian(ylim = c(0.25,1000)) +
+  theme(legend.position = "none",
+        panel.background = element_rect(fill = "seashell2"),
+        panel.grid = element_line(colour = "grey80"),
+        panel.grid.minor = element_blank()) 
+
+g_deaths_separate <- g_deaths_separate + 
+  facet_wrap(~ country, ncol = 3) + 
+  ggtitle("Asia 5 April 2020", subtitle = "Author: JW Pickering; Data: John Hopkins University")
+
+ggsave(g_deaths_separate, filename = "20-04-05 Asia Deaths.jpg", width = 210  , height = 20 + 40 * number_rows , units = "mm")
+(g_deaths_separate)
+```

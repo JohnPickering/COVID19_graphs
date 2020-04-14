@@ -48,11 +48,16 @@ countries <- data_frame(country = unique_100) %>%
     country == "United Kingdom" | country == "Spain" | country == "Italy" | country == "Germany"  | country == "France" | country == "Norway" | 
       country == "Switzerland"  | country == "Austria"  | country == "Belgium"  | country == "Netherlands" | country == "Poland"  | 
       country == "Sweden" | country == "Portugal" | country == "Luxemburg" | country == "Ireland" |  country == "Finland" |  country == "Denmark" |
-      country == "Greece" |  country == "Iceland" |  country == "Romania"  |  country == "Czechia"  |  country == "Russia"  |  country == "Sernia"  |  country == "Croatia" ~ "Europe",
-    country == "US" | country == "Mexico" | country == "Canada" | country == "Brazil"  |  country == "Chile" |  country == "Panama" | country == "Ecuador" |  country == "Peru" |  country == "Dominican Republic"  |  country == "Argentina" |  country == "Colombia" ~ "Americas",
+      country == "Greece" |  country == "Iceland" |  country == "Romania"  |  country == "Czechia"  |  country == "Russia"  |  country == "Serbia"  |
+      country == "Croatia"   |  country == "Ukraine"   |  country == "Estonia"   |  country == "Slovenia" |  country == "Hungary" | country == "Moldova" | 
+      country == "Bosnia and Herzegovina" | country == "Lithuania" ~ "Europe",
+    country == "US" | country == "Mexico" | country == "Canada" | country == "Brazil"  |  country == "Chile" |  country == "Panama" | country == "Ecuador" |  
+      country == "Peru" |  country == "Dominican Republic"  |  country == "Argentina" |  country == "Colombia" ~ "Americas",
     country == "New Zealand" | country == "Australia" ~ "Oceania",
-    country == "China" | country == "Singapore" | country == "Korea, South" | country == "Japan" | country == "Hong Kong"  | country == "Malaysia"  | country == "Indonesia"  | country == "Thailand"  | country == "Philippines"  |  country == "India" ~ "Asia",
-    country == "Iran" | country == "Saudi Arabia"  | country == "Israel" | country == "Turkey" | country ==  "United Arab Emirates" ~ "Gulf/Middle East",
+    country == "China" | country == "Singapore" | country == "Korea, South" | country == "Japan" | country == "Hong Kong"  | country == "Malaysia"  | 
+      country == "Indonesia"  | country == "Thailand"  | country == "Philippines"  |  country == "India" | country = "Bangladesh" ~ "Asia",
+    country == "Iran" | country == "Saudi Arabia"  | country == "Israel" | country == "Turkey" | country ==  "United Arab Emirates"   |  
+      country == "Iraq" | country = "Bahrain" | country == "Kazakhstan"  | country == "Azerbaijan" | country == "Uzbekistan"  | country == "Armenia" ~ "Gulf/Middle East",
     country == "South Africa" | country == "Egypt"  | country == "Morocco"  | country == "Tunesia"  | country == "Algeria" ~ "Africa",
     TRUE ~ "Other"
   ))
